@@ -38,12 +38,9 @@ const Home = () => {
           score,
         }
       })
-
       const sortedBusinesses = businessesWithScore.sort((a,b) => (a.score - b.score))
-    
       setBusinesses(sortedBusinesses)
       setTotal(res.data.total)
-
     } catch {
       setSearchMessage('Something went wrong, please refresh the page and try again')
     }
@@ -52,9 +49,7 @@ const Home = () => {
 
 
   // PAGINATION COMPONENT 
-
   const handlePagination = (page, pageSize) => {
-    console.log(pageSize)
     handleYelpAPISearch({page, pageSize})
   } 
 
@@ -72,8 +67,6 @@ const Home = () => {
     )
   }
   
-  console.log(businesses)
-
   // LIST COMPONENT 
   const renderList = () => {
     return (
