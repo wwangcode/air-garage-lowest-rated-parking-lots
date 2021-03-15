@@ -111,7 +111,7 @@ const Home = () => {
 
   const renderSearchBar = () => {
     return (
-        <div style={{margin: '2rem auto'}}>
+        <div style={{margin: '2rem auto', textAlign: 'center'}}>
           <div className={styles.title}>AirGarage Lowest Rated Parking Lots</div>
           <Input.Search 
             style={{width: '400px', marginTop: '1rem'}}

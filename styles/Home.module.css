@@ -5,12 +5,10 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  /* text-align: center; */
   background-color: #fec;
 }
 
 .title {
   font-size: 2rem;
   color: #fa824c;
-
 }
