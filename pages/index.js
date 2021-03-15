@@ -1,65 +1,146 @@
-import Head from 'next/head'
+import { useState } from 'react'
+import axios from 'axios'
 import styles from '../styles/Home.module.css'
+import 'antd/dist/antd.css'
+import { Input, List, Pagination } from 'antd'
 
-export default function Home() {
+
+const Home = () => {
+  const [ loading, setLoading ] = useState(false)
+  const [ searchMessage, setSearchMessage ] = useState('')
+  const [ searchInput, setSearchInput ] = useState('')
+  const [ businesses, setBusinesses ] = useState([])
+  const [ total, setTotal ] = useState(null)
+
+  // API CALL 
+  const handleYelpAPISearch = async (props) => {
+    const { page, pageSize } = props
+    const offset = page !== undefined ? (page - 1) * 20 : 0
+    const num_results = pageSize !== undefined ? pageSize : 20
+    if (searchInput === '') return setSearchMessage('Please input location and try again')
+
+    try {
+      const res = await axios.get('/api/yelp-api-search', {
+        params: {
+          location: searchInput,
+          radius: 40000,
+          categories: 'parking',
+          sort_by: 'rating',
+          offset: offset,
+          limit: num_results,
+        }
+      })
+
+      const businessesWithScore = res.data.businesses.map(item => {
+        const score = (item.review_count * item.rating) / (item.review_count + 1)
+        return {
+          ...item,
+          score,
+        }
+      })
+
+      const sortedBusinesses = businessesWithScore.sort((a,b) => (a.score - b.score))
+    
+      setBusinesses(sortedBusinesses)
+      setTotal(res.data.total)
+
+    } catch {
+      setSearchMessage('Something went wrong, please refresh the page and try again')
+    }
+
+  }
+
+
+  // PAGINATION COMPONENT 
+
+  const handlePagination = (page, pageSize) => {
+    console.log(pageSize)
+    handleYelpAPISearch({page, pageSize})
+  } 
+
+  const renderPagination = () => {
+    return (
+      <Pagination 
+        style={{margin: '4rem'}}
+        onChange={handlePagination}
+        defaultCurrent={1}
+        defaultPageSize={20}
+        total={total}
+        showSizeChanger
+        pageSizeOptions={['10', '20', '30', '40', '50']}
+      />
+    )
+  }
+  
+  console.log(businesses)
+
+  // LIST COMPONENT 
+  const renderList = () => {
+    return (
+      <List 
+        style={{width: '600px'}}
+        itemLayout="vertical"
+        size="large"
+        dataSource={businesses}
+        renderItem={item => (
+          <List.Item
+            key={item.name}
+            extra={
+              <img
+                width={200}
+                height={200}
+                style={{objectFit: 'cover'}}
+                alt={item.name}
+                src={item.image_url ? item.image_url : '/parking.svg'}
+              />
+            }
+          >
+            <List.Item.Meta
+              title={<a href={item.url}>{item.name}</a>}
+              description={item.location.display_address.map(index => (`${index}, `))}
+            />
+            {`Score: ${item.score}`}
+            <br />
+            {`Rating: ${item.rating}`}
+            <br />
+            {`Review Count: ${item.review_count}`}
+          </List.Item>
+        )}
+      />
+    )
+  }
+
+  // SEARCH BAR COMPONENT 
+  const handleInputChange = (e) => {
+    e.preventDefault()
+    setSearchInput(e.target.value)
+  }
+
+  const renderSearchBar = () => {
+    return (
+        <div style={{margin: '2rem auto'}}>
+          <div className={styles.title}>AirGarage Lowest Rated Parking Lots</div>
+          <Input.Search 
+            style={{width: '400px', marginTop: '1rem'}}
+            placeholder="Search for parking lots by location" 
+            enterButton="Search" 
+            size="large" 
+            loading={loading}
+            onSearch={handleYelpAPISearch}
+            onChange={handleInputChange}
+          />
+          {searchMessage}
+        </div>
+    )
+  }
+
   return (
     <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
+      {renderSearchBar()}
+      {renderList()}
+      {total && total > 0 && (renderPagination())}
     </div>
   )
 }
+
+export default Home
