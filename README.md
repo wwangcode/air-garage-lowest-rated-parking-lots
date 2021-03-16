@@ -12,7 +12,13 @@
 
 ## Getting Started
 
-First, run the development server:
+1. Create .env.local file in root of project directory and add your Yelp API Key 
+
+```.env
+YELP_API_KEY='Your API key goes here'
+````
+
+1. Run the development server:
 
 ```bash
 npm run dev
