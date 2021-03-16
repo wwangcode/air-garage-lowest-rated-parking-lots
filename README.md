@@ -18,7 +18,7 @@
 YELP_API_KEY='Your API key goes here'
 ````
 
-1. Run the development server:
+2. Run the development server:
 
 ```bash
 npm run dev
