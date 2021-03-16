@@ -1,14 +1,14 @@
 ## AirGarage Lowest Rated Parking Lots
 
-[Live deployment](https://airgarage-takehome.vercel.app/)
+* [Live deployment](https://airgarage-takehome.vercel.app/)
 
-Take home technical assesment [prompt](https://www.notion.so/Lowest-Rated-Parking-Lots-Coding-Challenge-1e29d723606048bf833e6661cfd3aed5)
+* Take home technical assesment [prompt](https://www.notion.so/Lowest-Rated-Parking-Lots-Coding-Challenge-1e29d723606048bf833e6661cfd3aed5)
 
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+* This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-Uses [Ant Design](https://ant.design/) UI components
+* Uses [Ant Design](https://ant.design/) UI components
 
-Connects to [Yelp API](https://www.yelp.com/developers/documentation/v3/business_search)
+* Connects to [Yelp API](https://www.yelp.com/developers/documentation/v3/business_search)
 
 ## Getting Started
 
