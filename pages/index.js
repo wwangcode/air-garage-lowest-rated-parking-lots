@@ -15,7 +15,7 @@ const Home = () => {
   // API CALL 
   const handleYelpAPISearch = async (props) => {
     const { page, pageSize } = props
-    const offset = page !== undefined ? (page - 1) * 20 : 0
+    const offset = page !== undefined ? (page - 1) * pageSize : 0
     const num_results = pageSize !== undefined ? pageSize : 20
     if (searchInput === '') return setSearchMessage('Please input location and try again')
 
